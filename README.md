@@ -1,7 +1,9 @@
 # OpenCoreConfiguratorOnline
 
 #### 介绍
-html版的OpenCore引导工具config.plist的在线编辑器, 
+html5版的OpenCore引导工具config.plist的在线编辑器
+
+fork from https://gitee.com/galada/OpenCoreConfiguratorOnline
 
 #### 软件架构
 html+javascript
@@ -11,9 +13,16 @@ html+javascript
 
 无需安装
 
+### CHANGELOG
+
+1. Custom模式同PlatformInfo.Automatic=false，两者级联
+2. ScanPolicy 选择框支持回显
+3. 替换回ace1.4.0的bootstrap3.3.6 （小屏幕菜单缩回）
+4. 添加codemirror merge视图
+
 #### 使用说明
 
-1.  直接使用在线版, 地址 [https://galada.gitee.io/opencoreconfiguratoronline](https://galada.gitee.io/opencoreconfiguratoronline)
+1.  直接使用在线版, 地址 [https://jumkey.github.io/OpenCoreConfiguratorOnline/](https://jumkey.github.io/OpenCoreConfiguratorOnline/)
 2.  git clone 后直接双击index.html使用
 
 功能示意图
