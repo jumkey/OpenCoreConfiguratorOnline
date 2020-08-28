@@ -12,8 +12,9 @@ $(document).ready(function() {
             let reader = new FileReader();
             reader.readAsText(files[0]);
             reader.onload = function () {
-            	VUEAPP['plistcontext'] = formatContext(this.result);
-            	//consolelog(VUEAPP['plistcontext']);
+                VUEAPP.filePlistContext = formatContext(this.result);
+            	VUEAPP.plistcontext = formatContext(this.result);
+            	//consolelog(VUEAPP.plistcontext);
             	VUEAPP.initAllData();
         	}
             return true;
@@ -348,16 +349,17 @@ let VUEAPP = new Vue({
     el: '#main-container',
     data: {
         root:'ACPI',                  //决定当前显示哪个节点
-        plistcontext:'',              //保存从config.plist中读取的内容
-        title:SYSTEM_TIPS,             //下面都是提示变量
-        textarea_content:'',          //保存粘贴页面时候textarea中的内容
-        current_paste_tableid:'',     //保存点击当前粘贴按钮的table id
-        lang:{},                      //语言数据, 和浏览器的语言设置挂钩
-        ACPI:{
-            Add:[],
-            Delete:[],
-            Patch:[] ,
-            Quirks:{
+        filePlistContext : '',          //保存从config.plist中读取的内容 除非重新读取不然不会变更
+        plistcontext : '',              //保存从config.plist中读取的内容
+        title : SYSTEM_TIPS,            //下面都是提示变量
+        textarea_content : '',          //保存粘贴页面时候textarea中的内容
+        current_paste_tableid : '',     //保存点击当前粘贴按钮的table id
+        lang : {},                      //语言数据, 和浏览器的语言设置挂钩
+        ACPI : {
+            Add : [],
+            Delete : [],
+            Patch : [] ,
+            Quirks : {
                 FadtEnableReset:false, NormalizeHeaders:false, RebaseRegions:false, ResetHwSig:false, ResetLogoStatus:false}
             },
         Booter:{
@@ -522,6 +524,14 @@ let VUEAPP = new Vue({
 
     watch: {
 
+        root(newval, oldval) {
+            if (newval === 'Diff') {
+                this.$nextTick(function () {
+                    this.loadDiff();
+                });
+            }
+        },
+
         //监视Automatic变量, 为否时显示Generic标签的内容
         'PlatformInfo.root.Automatic'(newval, oldval) {
         	if(newval === true) {
@@ -534,6 +544,58 @@ let VUEAPP = new Vue({
     },
 
     methods: {
+
+        initUI: function () {
+            const _this = this;
+            if (_this.value == null) return;
+            var target = document.getElementById("view");
+            target.innerHTML = "";
+            _this.dv = CodeMirror.MergeView(target, {
+                value: _this.value,
+                origLeft: _this.panes === 3 ? _this.orig1 : null,
+                orig: _this.orig2,
+                lineNumbers: true,
+                mode: "application/xml",
+                highlightDifferences: _this.highlight,
+                connect: _this.connect,
+                collapseIdentical: _this.collapse,
+                matchTags: {bothTags: true},
+                //inputStyle: "contenteditable"
+            });
+        },
+
+        toggleDifferences: function () {
+            const _this = this;
+            _this.dv.setShowDifferences(_this.highlight = !_this.highlight);
+        },
+
+        loadDiff: function () {
+            const _this = this;
+            _this.panes = 3;
+            _this.highlight = true;
+            _this.connect = null;
+            _this.collapse = false;
+            _this.value = getAllPlist();
+            _this.orig1 = _this.value;
+            _this.orig2 = $.format(_this.filePlistContext, 'xml');
+            _this.initUI();
+            let d = document.createElement("div");
+            d.style.cssText = "width: 50px; margin: 7px; height: 14px";
+            _this.dv.editor().addLineWidget(57, d)
+        },
+
+        prevDiff: function () {
+            this.dv.edit.execCommand("goPrevDiff");
+        },
+
+        nextDiff: function () {
+            this.dv.edit.execCommand("goNextDiff");
+        },
+
+        apply: function () {
+            this.plistcontext = formatContext(this.dv.edit.getValue());
+            this.initAllData();
+        },
 
         setRoot:function (rootname) {
             this.root = rootname;

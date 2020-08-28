@@ -20,6 +20,8 @@
 		<link rel="stylesheet" href="assets/css/ace-rtl.min.css" />
 		<link rel="stylesheet" href="assets/css/jquery.minimalTips.css" />
 		<link rel="stylesheet" href="assets/css/toastr.min.css" />
+		<link rel="stylesheet" href="assets/codemirror/lib/codemirror.css">
+		<link rel="stylesheet" href="assets/codemirror/addon/merge/merge.css">
 		<style type="text/css">
 			th div {text-align : center;}
 			.ctrlicon {
@@ -155,6 +157,15 @@
 								<a href="#" v-on:click="setRoot('UEFI')" :title="title.UEFI.title">
 									<i class="menu-icon fa fa-caret-right"></i>
 									UEFI
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+
+							<li v-bind:class="{ active: root === 'Diff' }">
+								<a href="#" v-on:click="setRoot('Diff')" :title="'View Diff'">
+									<i class="menu-icon fa fa-caret-right"></i>
+									View Diff
 								</a>
 
 								<b class="arrow"></b>
@@ -1910,6 +1921,19 @@
                             </div>
                         </div>
 
+						<div class="row" v-show="root === 'Diff'">
+							<button class="btn btn-minier btn-success" v-on:click="prevDiff()">{{lang.prev}}</button>
+							<button class="btn btn-minier btn-success" v-on:click="nextDiff()">{{lang.next}}</button>
+							<button class="btn btn-minier btn-success" v-on:click="toggleDifferences()">toggleDifferences</button>
+							<div id="view"></div>
+							<button class="btn btn-minier btn-success" v-on:click="apply()">{{lang.apply}}</button>
+							<ul>
+								<li>the left panel is value that get from gui</li>
+								<li>the middle panel is the result you can edit</li>
+								<li>the right panel is the imported file</li>
+							</ul>
+						</div>
+
 
                     </div>
 					</div><!-- /.page-content -->
@@ -2022,6 +2046,12 @@
         <script src="assets/js/clipboard.min.js"></script>
         <script src="assets/js/jquery.minimalTips.min.js"></script>
 		<script src="assets/js/toastr.min.js"></script>
+		<script src="assets/codemirror/lib/codemirror.js"></script>
+		<script src="assets/codemirror/addon/fold/xml-fold.js"></script>
+		<script src="assets/codemirror/addon/edit/matchtags.js"></script>
+		<script src="assets/codemirror/mode/xml/xml.js"></script>
+		<script src="assets/diff_match_patch.js"></script>
+		<script src="assets/codemirror/addon/merge/merge.js"></script>
 		<script src="assets/opencore/comm.js"></script>
 		<script src="assets/opencore/initGirdtable.js"></script>
 		<script src="assets/opencore/index.js"></script>
