@@ -104,7 +104,7 @@ function getKernel() {
 
 	//Emulate
 	keContext += '<key>Emulate</key><dict>';
-	
+
 	keContext += '<key>Cpuid1Data</key>';
 	keContext += '<data>' + hextoBase64(VUEAPP.Kernel.Emulate['Cpuid1Data']) + '</data>';
 	keContext += '<key>Cpuid1Mask</key>';
@@ -196,9 +196,9 @@ function getMisc() {
 	miscContext += '<key>ApECID</key><integer>' + toNumber(VUEAPP.Misc.Security['ApECID']) + '</integer>';
 	miscContext += '<key>AuthRestart</key>' + toBoolStringStrict(VUEAPP.Misc.Security['AuthRestart']);
 	miscContext += '<key>BlacklistAppleUpdate</key>' + toBoolStringStrict(VUEAPP.Misc.Security['BlacklistAppleUpdate']);
-	
 
-	miscContext += '<key>DmgLoading</key>' + addCharstring(VUEAPP.Misc.Security['DmgLoading']); 
+
+	miscContext += '<key>DmgLoading</key>' + addCharstring(VUEAPP.Misc.Security['DmgLoading']);
 	miscContext += '<key>EnablePassword</key>' + toBoolStringStrict(VUEAPP.Misc.Security['EnablePassword']);
 	miscContext += '<key>ExposeSensitiveData</key><integer>' + toNumber(VUEAPP.Misc.Security['ExposeSensitiveData']) + '</integer>';
 	miscContext += '<key>HaltLevel</key><integer>' + toNumber(VUEAPP.Misc.Security['HaltLevel']) + '</integer>';
@@ -246,7 +246,7 @@ function getNVRAM() {
 }
 
 function getPlatformInfo() {
-	let pfiContext = '<key>PlatformInfo</key><dict>', configisfull = VUEAPP.configisfull;
+	let pfiContext = '<key>PlatformInfo</key><dict>', configisfull = !VUEAPP.PlatformInfo.root.Automatic;
 	//consolelog(configisfull);
 
 	//0 Automatic
@@ -259,7 +259,7 @@ function getPlatformInfo() {
 	pfiContext += getStringorboolorinterger(VUEAPP.PlatformInfo.Generic, gdatatype);
 	pfiContext += '</dict>';
 
-	
+
 	if(configisfull === true) {
 
 		//DataHub
@@ -290,7 +290,7 @@ function getPlatformInfo() {
 		pfiContext += getStringorboolorinterger(VUEAPP.PlatformInfo.SMBIOS, smbiosdatatype);
 		pfiContext += '</dict>';
 
-		
+
 
 
 	}
@@ -384,7 +384,7 @@ function getDeviceVolumeData(leftData, rightData) {
 		strreturn += getSubDeviceVolumeData(leftData[it]['id'], rightData);
 	}
 
-	
+
 	if(strreturn === '<dict>') {
 		return '<dict/>';
 	} else {
@@ -437,7 +437,7 @@ function getStringorboolorinterger(theData, dataType) {
 
 	for(let it in theData) {
 
-		
+
 		vueitDatatype = typeof(theData[it]);
 		if(vueitDatatype == 'object') continue; //如果碰到数组直接跳过
 
@@ -483,14 +483,14 @@ function getDeviceData(leftData, rightData) {
 		strreturn += addKey(leftData[it]['Devices']);
 		strreturn += getSubDeviceData(leftData[it]['id'], rightData)
 	}
-	
+
 	if(strreturn === '<dict>') {
 		return '<dict/>';
 	} else {
 		return strreturn + '</dict>';
 	}
 
-	
+
 }
 
 function getSubDeviceData(pid, rightData) {
@@ -532,7 +532,7 @@ function getSubDeviceData(pid, rightData) {
 function getBoolens(boolData,intData) {
 	if(intData === undefined) {
 		intData = [];
-	} 
+	}
 	let strreturn = '<dict>';
 	for(let it in boolData) {
 		strreturn += addKey(it);
@@ -541,7 +541,7 @@ function getBoolens(boolData,intData) {
 		} else {
 			strreturn += toBoolStringStrict(boolData[it]);
 		}
-		
+
 	}
 
 	if(strreturn === '<dict>') {
@@ -593,13 +593,13 @@ function genArrayDict(tablekey, arrayDictData, dataFileds, intFileds) {
 		arrayDictData = rewriteData(currentTableData, arrayDictData);
 	}
 
-	
+
 
 
 	let tmpreturn = '';
 	for(let i=0,len=arrayDictData.length;i<len;i++) {
 		tmpreturn += '<dict>';
-		
+
 		for(let it in arrayDictData[0]) {   //字段顺序跟着第一行数据的字段顺序走，防止后增加的行的字段顺序和前面的不同
 			if(it === 'id' || it === 'pid') {
 				continue;
@@ -624,7 +624,7 @@ function genArrayDict(tablekey, arrayDictData, dataFileds, intFileds) {
 			else {
 				tmpreturn += addvtype(itemData);
 			}
-            
+
 
 		}
 		tmpreturn += '</dict>';
@@ -683,11 +683,11 @@ function rewriteData(leftdata, rightdata) {
 function getRewriteLRData(tablekey, rightdata) {
 	//替换数据前先看看表格有没有被拖动，没有拖动就不替换
 	if(GLOBAL_ARRAY_TABLE[2][tablekey] === true) {
-		
+
 		let currentTableData = GLOBAL_ARRAY_TABLE[1][tablekey].jqGrid('getRowData');
 		return rewriteData(currentTableData, rightdata)
 	} else {
 		return rightdata;
 	}
-	
+
 }

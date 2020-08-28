@@ -47,11 +47,11 @@ $(document).ready(function() {
 
     //显示适用于版本信息
     showTipModal(VUEAPP.lang.supportversion, 'warning');
-    
+
     //页面加载完成后解除文件选择框的禁用属性
     $("#id-input-file-2").removeAttr("disabled");
-   
-    
+
+
 });
 
 function addFile(fileid) {
@@ -59,9 +59,9 @@ function addFile(fileid) {
     let file = document.getElementById(fileid), files;
     let thetablename,thetable;
     if(fileid === "File_ACPI_Add") {
-        thetablename = "ACPI_Add";        
+        thetablename = "ACPI_Add";
     } else if(fileid === "File_UEFI_Drivers") {
-        thetablename = "UEFI_Drivers";        
+        thetablename = "UEFI_Drivers";
     }
 
     thetable = getJqgridObjectbyKey(thetablename);
@@ -74,19 +74,10 @@ function addFile(fileid) {
         } else if(thetablename === "UEFI_Drivers") {
             newData = { FileName:files.name };
         }
-        
+
         thetable.jqGrid('addRowData', MAXROWID++, newData, 'last');
 
 	}
-}
-
-//获取指定数量的0字符串
-function getZero(total) {
-    let zero = '';
-    for(let i=0;i<total;i++) {
-        zero += '0';
-    }
-    return zero;
 }
 
 //绑定所有的按钮的clicks事件
@@ -107,15 +98,15 @@ function bindAllButton() {
 
         let gridtableid = currentGridTable.attr('id');
         let buttonBehind = gridtableid.slice(10);
-        
+
 
         // 1 绑定所有的增加按钮
         $("#btnadd_" + buttonBehind).on("click",function(){
 
             //如果是右边表格, 先检查左边有没有选中, 如果没有, 不做任何反应
             if(buttonBehind.substr(-5) === 'Right') {
-                
-                
+
+
                 let theGrid = getJqgridObjectbyKey(buttonBehind.replace('Right','Left'));
 
                 let selectedId = theGrid.jqGrid("getGridParam", "selrow");
@@ -149,7 +140,7 @@ function bindAllButton() {
                 }
 
                 for(let i=0,len=selectedIds.length;i<len;i++) {
-                    
+
                     if(leftSelectedId === undefined) {
                         deleteIds.push(parseInt(selectedIds[i]));
                     } else {
@@ -158,10 +149,10 @@ function bindAllButton() {
                             deleteIds.push(parseInt(selectedIds[i]));
                         }
                     }
-                    
+
                 }
                 deleteIds.sort(sortNumber);
-                let len = deleteIds.length - 1;     
+                let len = deleteIds.length - 1;
 
                 for(let i=len;i>=0;i--) {
 
@@ -170,7 +161,7 @@ function bindAllButton() {
 
                 //如果删除左边表格, 要隐藏右边表格
                 if(buttonBehind.substr(-4) === 'Left') {
-                    
+
                     let rightGrid = getJqgridObjectbyKey(buttonBehind.replace('Left', 'Right'));
                     let rowIds = rightGrid.getDataIDs();
                     for(let i=0,len=rowIds.length;i<len;i++) {
@@ -201,23 +192,23 @@ function bindAllButton() {
             let rowData, arrStrdata = [], leftSelectedId;
 
             //如果是右边表格, 只要复制左边选中行下面的数据即可
-            if(buttonBehind.substr(-5) === 'Right') {               
-                
+            if(buttonBehind.substr(-5) === 'Right') {
+
                 let leftGrid = getJqgridObjectbyKey(buttonBehind.replace('Right','Left'));
 
                 leftSelectedId = leftGrid.jqGrid("getGridParam", "selrow");
-                
+
             }
 
             for(let i=0,len=selectedId.length;i<len;i++) {
                 rowData = currentGridTable.jqGrid('getRowData', selectedId[i]);
-                
+
                 if(leftSelectedId === undefined || leftSelectedId == rowData.pid) {
                     arrStrdata.push(JSON.stringify(rowData));
                 }
-                
+
             }
-            
+
             copyDatatoClipboard('[' + arrStrdata.join() + ']');
 
             showTipModal(VUEAPP.lang.copydatasuccess, 'success');
@@ -247,7 +238,7 @@ function bindAllButton() {
 
         });
 
-        
+
 
     }
 
@@ -362,7 +353,6 @@ let VUEAPP = new Vue({
         textarea_content:'',          //保存粘贴页面时候textarea中的内容
         current_paste_tableid:'',     //保存点击当前粘贴按钮的table id
         lang:{},                      //语言数据, 和浏览器的语言设置挂钩
-        configisfull:false,           //是否full模式
         ACPI:{
             Add:[],
             Delete:[],
@@ -394,9 +384,9 @@ let VUEAPP = new Vue({
             Scheme:{KernelArch:'',KernelCache:'',FuzzyMatch:false},
             Force:[],
             Quirks:{
-                
+
                 AppleCpuPmCfgLock:false, AppleXcpmCfgLock:false, AppleXcpmExtraMsrs:false, AppleXcpmForceBoost:false,CustomSMBIOSGuid:false,
-                DisableIoMapper:false, DisableLinkeditJettison:false,DisableRtcChecksum:false, ExtendBTFeatureFlags:false, ExternalDiskIcons:false, 
+                DisableIoMapper:false, DisableLinkeditJettison:false,DisableRtcChecksum:false, ExtendBTFeatureFlags:false, ExternalDiskIcons:false,
                 ForceSecureBootScheme:false,IncreasePciBarSize:false,
                 LapicKernelPanic:false, LegacyCommpage:false, PanicNoKextDump:false,
                 PowerTimeoutKernelPanic:false,SetApfsTrimTimeout:-1, ThirdPartyDrives:false, XhciPortLimit:false
@@ -406,7 +396,7 @@ let VUEAPP = new Vue({
             BlessOverride:[],
             Boot:{
                 HibernateMode:'None', PickerMode:'Builtin', PickerVariant:'Auto', TakeoffDelay:'0',
-                Timeout:'0', HideAuxiliary:false, LauncherOption:'Disabled',LauncherPath:'Default', ConsoleAttributes:'0', 
+                Timeout:'0', HideAuxiliary:false, LauncherOption:'Disabled',LauncherPath:'Default', ConsoleAttributes:'0',
                 PickerAttributes:'0', PickerAudioAssist:false,PollAppleHotKeys: false, ShowPicker: false
             },
             Debug: {
@@ -432,7 +422,7 @@ let VUEAPP = new Vue({
         },
         PlatformInfo:{
             root:{
-                Automatic:false, CustomMemory:false,UpdateDataHub:false, UpdateNVRAM:false, UpdateSMBIOS:false, UpdateSMBIOSMode:'Create',
+                Automatic:true, CustomMemory:false,UpdateDataHub:false, UpdateNVRAM:false, UpdateSMBIOS:false, UpdateSMBIOSMode:'Create',
                 UseRawUuidEncoding:false
             },
             DataHub:{
@@ -456,7 +446,7 @@ let VUEAPP = new Vue({
             SMBIOS:{
                 BIOSReleaseDate:'', BIOSVendor:'', BIOSVersion:'', BoardAssetTag:'', BoardLocationInChassis:'', BoardManufacturer:'',
                 BoardProduct:'', BoardSerialNumber:'', BoardType:'', BoardVersion:'', ChassisAssetTag:'', ChassisManufacturer:'',
-                ChassisSerialNumber:'', ChassisType:'', ChassisVersion:'', FirmwareFeatures:'', FirmwareFeaturesMask:'', 
+                ChassisSerialNumber:'', ChassisType:'', ChassisVersion:'', FirmwareFeatures:'', FirmwareFeaturesMask:'',
                 PlatformFeature:'', ProcessorType:'', SmcVersion:'', SystemFamily:'', SystemManufacturer:'',
                 SystemProductName:'', SystemSKUNumber:'', SystemSerialNumber:'', SystemUUID:'', SystemVersion:''
             }
@@ -473,7 +463,7 @@ let VUEAPP = new Vue({
                 SetupDelay:0,VolumeAmplifier:0
 			},
             Input:{
-                KeyFiltering:false,KeyForgetThreshold:'', KeySupport:false, KeySupportMode:'', KeySwap:false,  
+                KeyFiltering:false,KeyForgetThreshold:'', KeySupport:false, KeySupportMode:'', KeySwap:false,
                 PointerSupport:false, PointerSupportMode:'', TimerResolution:''
 
             },
@@ -509,21 +499,21 @@ let VUEAPP = new Vue({
 
             //特殊,,ConsoleMode_List 的数据和 Resolution_List一样
             ,ConsoleMode_List: SYSTEM_TIPS.Assist.Resolution_List
-            
-            
+
+
         }
 
     },
 
     created:function () {
         let syslang = navigator.language;
-        
+
         if(syslang === undefined || GLOBAL_LANG[syslang] === undefined) {
             this.lang = GLOBAL_LANG['en-US'];
         } else {
             this.lang = GLOBAL_LANG[syslang];
         }
-        
+
         //用SYSTEM_TIPS.Assist填充Assist
         for(let assetit in SYSTEM_TIPS.Assist) {
             this.Assist[assetit] = SYSTEM_TIPS.Assist[assetit];
@@ -532,11 +522,13 @@ let VUEAPP = new Vue({
 
     watch: {
 
-        //监视configisfull变量, 为否时显示Generic标签的内容
-        configisfull(newval, oldval) {
-        	if(oldval === true && newval === false && $("#li_PlatformInfo_Generic").hasClass("active") === false) {
+        //监视Automatic变量, 为否时显示Generic标签的内容
+        'PlatformInfo.root.Automatic'(newval, oldval) {
+        	if(newval === true) {
         		$('#button_PlatformInfo_Generic').click();
-        	}
+        	} else {
+                $('#button_PlatformInfo_DataHub').click();
+            }
 
         }
     },
@@ -569,7 +561,7 @@ let VUEAPP = new Vue({
             let dataType = '';
             for(let it in vueData) {
                 dataType = typeof(vueData[it]);
-                
+
                 if(dataType === "boolean") {
                     Vue.set(vueData, it, partrue(getValuesByKeyname(context, it)));
                 } else if(dataType === "object"){
@@ -668,7 +660,7 @@ let VUEAPP = new Vue({
             for(let i=0,len=arrayDrivers.length;i<len;i++) {
                 this.UEFI.Drivers.push({ FileName:arrayDrivers[i]['Volume']}) ;
             }
-            
+
             getJqgridObjectbyKey('UEFI_Drivers').trigger("reloadGrid");
 
 			//APFS
@@ -708,9 +700,6 @@ let VUEAPP = new Vue({
 
             //DataHub
             let DataHubText = getValuesByKeyname(ipiText, 'DataHub');
-
-            //如果DataHub为空, 就不显示datahub , PlatformNVRAM SMBIOS 三项目
-            this.configisfull = DataHubText === '' ? false:true;
 
             //consolelog('DataHubText=' + DataHubText);
             this.getAndSetDictItem(DataHubText, this.PlatformInfo.DataHub);
@@ -835,10 +824,10 @@ let VUEAPP = new Vue({
         , initBooter:function () {
 
             let text = getValuesByKeyname(VUEAPP.plistcontext, 'Booter', true);
-            
+
             this.getPlistAndResetTableData(text, 'Patch', 'Booter_Patch', this.Booter.Patch);
 
-            
+
             this.getPlistAndResetTableData(text, 'MmioWhitelist', 'Booter_MmioWhitelist', this.Booter.MmioWhitelist);
 
             let QuirksText = getValuesByKeyname(text, 'Quirks');
@@ -877,12 +866,12 @@ let VUEAPP = new Vue({
             let buttonids = event.currentTarget.id.split('_');
             if(this.Assist.last_radiobox_ids.join('_') === event.currentTarget.id) {
                 consolelog('上次页面和将要显示的页面相同，不做单选数据填充');
-            
+
             } else {
                 consolelog('上次页面和将要显示的页面不相同，做单选数据填充处理');
                 this.Assist.pageRadio_List = this.Assist[buttonids[3] + '_List'];
                 this.Assist.last_radiobox_ids = buttonids;
-                
+
             }
 
             //根据输入框中的值决定要不要勾选单选框
@@ -898,85 +887,35 @@ let VUEAPP = new Vue({
         , btncheckboxclick:function (event, vlen) {
             this.Assist.RADIO_CHECK_BOX = 'C';
             let buttonids = event.currentTarget.id.split('_');
-            
-            // 1 为要显示的页面添加可选框数据列表 current_checkbox_id
-            if(this.Assist.last_checkbox_ids.join('_') === event.currentTarget.id) {
-                consolelog('上次页面和将要显示的页面相同，不做多选数据填充');
-            
-            } else {
-                consolelog('上次页面和将要显示的页面不相同，做多选数据填充处理');
-                this.Assist.pagePublic_List = this.Assist[buttonids[3] + '_List'];
-                this.Assist.last_checkbox_ids = buttonids;
-                this.Assist.pagePublic_Selected = [];
-            }
-            
+
+            this.Assist.pagePublic_List = this.Assist[buttonids[3] + '_List'];
+            this.Assist.last_checkbox_ids = buttonids;
+            this.Assist.pagePublic_Selected = [];
 
             // 2 获取页面上输入框中的值
             let pageinputvalue = this[buttonids[1]][buttonids[2]][buttonids[3]];
 
-            //如果页面输入框中的值为空，就清空已经选中的项目
-            if((pageinputvalue > 0) === false) {
-                this.Assist.pagePublic_Selected = [];
-                $('#divMuCheckboxPageModal').modal('show');
-                return;
-            } 
-            
-            // 4 如果勾选的值和页面输入框中的值相等   
-            if(pageinputvalue == this.getCheckedTotal()) {
-                $('#divMuCheckboxPageModal').modal('show');
-                consolelog('勾选值和页面值相等，不做自动勾选处理');
-                return;
-            }
-
-            let piv16 = parseInt(pageinputvalue).toString(16), itval,
-            ckdict = {
-                '1':['1'],
-                '2':['2'],
-                '3':['1','2'],
-                '4':['4'],
-                '5':['1','4'],
-                '6':['2','4'],
-                '7':['1','2','4'],
-                '8':['8'],
-                '9':['1','8'],
-                'a':['2','8'],   //10
-                'b':['1','2','8'],//11
-                'c':['4','8'],//12
-                'd':['1','4','8'],//13
-                'e':['2','4','8'],//14
-                'f':['1','2','4','8']//15
-            };
-            this.Assist.pagePublic_Selected = [];
-
-            
-            if(vlen === undefined || vlen === 0) {
-                vlen = 8;
-            }
-
-            for(let i=piv16.length-1,k=1;i>=0;i--,k++) {
-                if(piv16[i] === '0') continue;
-        
-                itval = ckdict[piv16[i]];
-                for(let j=0;j<itval.length;j++) {
-                    this.Assist.pagePublic_Selected.push('0x' + getZero(vlen-k) + itval[j] + getZero(k-1));
+            for (let i = 0; i < this.Assist.pagePublic_List.length; i++) {
+                let it = this.Assist.pagePublic_List[i];
+                let sv = parseInt(it.val, 16);
+                if (sv === (pageinputvalue & sv)) {
+                    this.Assist.pagePublic_Selected.push(it.val);
                 }
-                
             }
 
-            
             $('#divMuCheckboxPageModal').modal('show');
         }
 
         //勾选页面点击确定按钮事件
-        , checkboxPageBtnOKclick:function () {
+        , checkboxPageBtnOKclick : function () {
             if(this.Assist.RADIO_CHECK_BOX === 'C') {
                 this[this.Assist.last_checkbox_ids[1]][this.Assist.last_checkbox_ids[2]][this.Assist.last_checkbox_ids[3]] = this.getCheckedTotal();
-            } 
+            }
 
             else if(this.Assist.RADIO_CHECK_BOX === 'R') {
                 this[this.Assist.last_radiobox_ids[1]][this.Assist.last_radiobox_ids[2]][this.Assist.last_radiobox_ids[3]] = this.Assist.pageRadio_CurrentValue;
             }
-            
+
             $('#divMuCheckboxPageModal').modal('hide');
         }
 
@@ -1026,9 +965,9 @@ function startPaste() {
 		return;
 	}
 
-    
+
  	let ids = VUEAPP.current_paste_tableid.split('_');
-    
+
     let objGridTable = getJqgridObjectbyKey(ids[1] + '_' + ids[2]);
 
     //检查数据复制源和复制的格式是否一致
